@@ -32,3 +32,11 @@ POST的安全性要比GET的安全性高。比如：通过GET提交数据，用�
 
 * 我们可以使用HttpURLConnection.connect()方法手动的发送一个HTTP请求，但是如果要获取HTTP响应的时候，请求就会自动的发起，比如我们使用HttpURLConnection.getInputStream()方法的时候，所以完全没有必要调用connect()方法。
 
+### HttpClient
+
+解决Android studio开发找不到HttpClient问题
+
+在Android 6.0（API 23） 中，Google已经移除了Apache HttpClient 想关类，推荐使用HttpUrlConnection，如果要继续使用，在Android studio对应的module下的build.gradle文件中加入：
+android {
+useLibrary 'org.apache.http.legacy'
+}

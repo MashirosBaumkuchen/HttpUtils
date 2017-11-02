@@ -15,7 +15,7 @@ import java.util.Map;
  * @author No.47 create at 2017/11/2.
  */
 public class HttpURLConnectionUtils {
-    public static final String TAG = "HttpURLConnectionUtils";
+    public static final String TAG = HttpURLConnectionUtils.class.getSimpleName();
 
     public static void get() {
         Runnable runnable = new Runnable() {
