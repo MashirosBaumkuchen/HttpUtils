@@ -1,0 +1,24 @@
+package com.segway.demo.converter;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+
+/**
+ * @author No.47 create at 2017/11/2.
+ */
+public class StringConverterFactory extends Converter.Factory {
+
+    public static StringConverterFactory create() {
+        return new StringConverterFactory();
+    }
+
+    @Override
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        if (type == String.class) {
+            return StringConverter.INSTANCE;
+        }
+        return null;
+    }
+}

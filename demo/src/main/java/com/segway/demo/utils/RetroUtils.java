@@ -6,14 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segway.demo.bean.Event;
 import com.segway.demo.bean.Result;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.segway.demo.converter.StringConverterFactory;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -32,30 +31,40 @@ public class RetroUtils {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.juheapi.com/japi/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         HoTService service = retrofit.create(HoTService.class);
-        Call<Result<Event>> call = service.getEvent("eff36bdaeeb868a6b8057a34f32d1326",
-                "1.0", month, day);
-        call.enqueue(new Callback<Result<Event>>() {
-            @Override
-            public void onResponse(Call<Result<Event>> call, Response<Result<Event>> response) {
-                Log.d(TAG, "onResponse");
-                Log.d(TAG, String.valueOf(response.code()));
-                Log.d(TAG, response.body().getResult().get(0).getDes());
-            }
+        service.getEvent("eff36bdaeeb868a6b8057a34f32d1326", "1.0", month, day)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<Event>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                    }
 
-            @Override
-            public void onFailure(Call<Result<Event>> call, Throwable t) {
-                Log.d(TAG, "onResponse");
-            }
-        });
+                    @Override
+                    public void onNext(Result<Event> value) {
+                        Log.d(TAG, "onNext");
+                        Log.d(TAG, value.getResult().get(0).getDes());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
     }
 
     public interface HoTService {
         @GET("toh")
-        Call<Result<Event>> getEvent(@Query("key") String key,
-                                     @Query("version") String version,
-                                     @Query("month") String month,
-                                     @Query("day") String day);
+        Observable<Result<Event>> getEvent(@Query("key") String key,
+                                           @Query("version") String version,
+                                           @Query("month") String month,
+                                           @Query("day") String day);
     }
 }
