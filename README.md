@@ -61,4 +61,60 @@ useLibrary 'org.apache.http.legacy'
 支持请求回调，直接返回对象、对象集合
 支持session的保持
 
+### retrofit2.0+gson
+
+```
+ public void get(String month, String day) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd hh:mm:ss")
+                .create();
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.juheapi.com/japi/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        HoTService service = retrofit.create(HoTService.class);
+        Call<ResponseBody> call = service.getEvent("eff36bdaeeb868a6b8057a34f32d1326",
+                "1.0", month, day);
+        call.enqueue(new Callback<ResponseBody>() {
+            ...
+        });
+    }
+
+    public interface HoTService {
+        @GET("toh")
+        Call<Result<Event>> getEvent(@Query("key") String key,
+                                     @Query("version") String version,
+                                     @Query("month") String month,
+                                     @Query("day") String day);
+    }
+```
+
+### retrofit2.0+rxjava2+gson
+
+```
+public void get(String month, String day) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd hh:mm:ss")
+                .create();
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.juheapi.com/japi/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        HoTService service = retrofit.create(HoTService.class);
+        service.getEvent("eff36bdaeeb868a6b8057a34f32d1326", "1.0", month, day)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<Event>>() {
+                    ...
+                });
+    }
+
+    public interface HoTService {
+        @GET("toh")
+        Observable<Result<Event>> getEvent(@Query("key") String key,
+                                           @Query("version") String version,
+                                           @Query("month") String month,
+                                           @Query("day") String day);
+    }
+```
 

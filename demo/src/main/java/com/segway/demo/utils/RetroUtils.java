@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segway.demo.bean.Event;
 import com.segway.demo.bean.Result;
-import com.segway.demo.converter.StringConverterFactory;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
