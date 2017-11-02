@@ -3,6 +3,8 @@ package com.segway.httputils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.segway.httputils.httpclient.HttpClientUtils;
+import com.segway.httputils.okhttp.OKHttpUtils;
+import com.squareup.okhttp.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
 //        HttpURLConnectionUtils.get();
 //        HttpURLConnectionUtils.post();
 //        HttpClientUtils.get();
-        HttpClientUtils.post();
+//        HttpClientUtils.post();
+//        OKHttpUtils.get();
+        OKHttpUtils.post();
     }
 }
