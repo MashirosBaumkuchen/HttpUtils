@@ -51,3 +51,14 @@ useLibrary 'org.apache.http.legacy'
 
 5.调用HttpResponse的getAllHeaders()、getHeaders(String name)等方法可获取服务器的响应头；调用HttpResponse的getEntity()方法可获取HttpEntity对象，该对象包装了服务器的响应内容。程序可通过该对象获取服务器的响应内容。
 
+### OKHttpClient
+
+一般的get请求
+一般的post请求
+基于Http的文件上传
+文件下载
+加载图片
+支持请求回调，直接返回对象、对象集合
+支持session的保持
+
+

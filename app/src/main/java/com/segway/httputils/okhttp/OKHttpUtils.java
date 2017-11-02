@@ -1,21 +1,14 @@
 package com.segway.httputils.okhttp;
 
-import android.os.Environment;
 import android.util.Log;
-
+import com.google.gson.Gson;
+import com.segway.httputils.okhttp.bean.BeanDemo;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
-
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -39,8 +32,6 @@ public class OKHttpUtils {
 
             @Override
             public void onResponse(Response response) throws IOException {
-//                bytes : response.body().bytes();
-//                inputStream : response.body().byteStream();
                 Log.d(TAG, response.body().string());
             }
         });
@@ -66,7 +57,9 @@ public class OKHttpUtils {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                Log.d(TAG, response.body().string());
+                Gson gson = new Gson();
+                BeanDemo beanDemo = gson.fromJson(response.body().string(),BeanDemo.class);
+                Log.d(TAG, beanDemo.getResult().get(0).getDes());
             }
         });
     }
