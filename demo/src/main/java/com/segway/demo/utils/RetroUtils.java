@@ -1,7 +1,6 @@
 package com.segway.demo.utils;
 
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.segway.demo.bean.Event;
@@ -22,8 +21,12 @@ import retrofit2.http.Query;
 public class RetroUtils {
     private final String TAG = getClass().getSimpleName();
     private Retrofit retrofit;
+    private CallBack callBack;
 
-    public void get(String month, String day) {
+    public void get(String month, String day) throws CallBackException {
+        if (this.callBack == null) {
+            throw new CallBackException("error : callback is null");
+        }
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd hh:mm:ss")
                 .create();
@@ -45,16 +48,19 @@ public class RetroUtils {
                     public void onNext(Result<Event> value) {
                         Log.d(TAG, "onNext");
                         Log.d(TAG, value.getResult().get(0).getDes());
+                        callBack.onNext(value);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, "onError");
+                        callBack.onError(e);
                     }
 
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "onComplete");
+                        callBack.onComplete();
                     }
                 });
     }
@@ -65,5 +71,23 @@ public class RetroUtils {
                                            @Query("version") String version,
                                            @Query("month") String month,
                                            @Query("day") String day);
+    }
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    public interface CallBack {
+        void onNext(Result<Event> value);
+
+        void onError(Throwable e);
+
+        void onComplete();
+    }
+
+    class CallBackException extends Exception {
+        public CallBackException(String message) {
+            super(message);
+        }
     }
 }
